@@ -5,7 +5,7 @@ const request = require('supertest');
 const {app} = require('./../server');
 const {Todo} = require('./../models/todo');
 
-const todos = [{
+const todos = [{                            //Creating the dummy object 
     text: 'First test todo'
 },{
     text: 'Second test todo'
@@ -17,13 +17,17 @@ beforeEach((done)=>{
     }).then(()=>done());
 });
 
+
+// Test cases for POST request
+
+
 describe('POST /todos', ()=>{
     it('Should create a new todo',(done)=>{
         var text = 'Test todo text';
 
-        request(app)
-        .post('/todos')
-        .send({text})
+        request(app)                                 //Initiating the request
+        .post('/todos')                             //Making a POST request
+        .send({text})                               //Sending the object
         .expect(200)
         .expect((res)=>{
             expect(res.body.text).toBe(text);
@@ -33,7 +37,7 @@ describe('POST /todos', ()=>{
                 return done(err);
             }
 
-            Todo.find({}).then((todos)=>{
+            Todo.find({text}).then((todos)=>{
                 expect(todos.length).toBe(1);
                 expect(todos[0].text).toBe(text);
                 done();
@@ -42,10 +46,10 @@ describe('POST /todos', ()=>{
         
     });
 
-
+//Test case for sending empty object
 
     it('Should not create todo with Invalid data', (done)=>{
-        request(app)
+        request(app)                                        
         .post('/todos')
         .send({})
         .expect(400)
@@ -62,12 +66,14 @@ describe('POST /todos', ()=>{
 });
 
 
-describe('GET /todos', ()=>{
+//creating test cases for GET request
+
+describe('GET /todos', ()=>{                                    
     it('Should get all todos', (done)=>{
-        request(app)
-        .get('/todos')
-        .expect(200)
-        .expect((res)=>{
+        request(app)                            //initiate request
+        .get('/todos')                          //Making GET request
+        .expect(200)                            //Checking the response status from postman
+        .expect((res)=>{                        //creating custom expect
         expect(res.body.todos.length).toBe(2);
     })
     .end(done);
