@@ -10,6 +10,8 @@ var { Todo } = require('./models/todo');
 var { User } = require('./models/users');
 
 var app = express();
+//The process.env is set app is running on heroku, else it will run locally on port 3000
+const port = process.env.PORT || 3000; 
 
 app.use(bodyParser.json());
 
@@ -54,8 +56,8 @@ app.get('/todos/:id', (req, res) => {
   ).catch((e) => res.status(404).send());
 });
 
-app.listen(3000, () => {
-  console.log('Started on port 3000');
+app.listen(port, () => {
+  console.log('Started on port',port);
 });
 
 module.exports = { app };
