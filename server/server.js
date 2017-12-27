@@ -1,3 +1,6 @@
+var {ObjectID} = require('mongodb');
+
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -29,6 +32,33 @@ app.get('/todos', (req, res)=>{
 res.status(400).send(e);
   });
 });
+
+
+//Pass the query using the query string
+
+app.get('/todos/:id',(req, res)=>{
+  var id=req.params.id;             //Params has the key value pairs, where key is url and value is whatever we give
+  if(!ObjectID.isValid(id)){
+   res.status(404).send();
+  }
+  Todo.findById(id).then((todo)=>{
+    if(!todo){
+      console.log("Todo not found");
+       res.status(404).send(); 
+    }
+    else{
+
+     res.send({todo});
+    }
+  }
+).catch((e)=>res.status(404).send());
+});
+
+
+
+
+
+
 
 app.listen(3000, () => {
   console.log('Started on port 3000');
