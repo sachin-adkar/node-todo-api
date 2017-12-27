@@ -71,15 +71,15 @@ app.delete('/todos/:id', (req, res) => {
   }
 
   // remove todo by id
-  Todo.findByIdAndRemove(id).then((doc) => {
+  Todo.findByIdAndRemove(id).then((todo) => {
  
     //if no doc 404
-    if (!doc) {
+    if (!todo) {
       return res.status(404).send();
     }
     //succes
     //if doc return it
-    res.send(doc);
+    res.send({todo});
   }).catch((e) => res.status(404).send()); //error 404
 });
 
