@@ -11,7 +11,7 @@ var { User } = require('./models/users');
 
 var app = express();
 //The process.env is set app is running on heroku, else it will run locally on port 3000
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -28,7 +28,8 @@ app.post('/todos', (req, res) => {
 });
 
 app.get('/todos', (req, res) => {
-  Todo.find().then((todos) => {          //find all the todos
+  //find all the todos
+  Todo.find().then((todos) => {
     res.send({ todos });
   }, (e) => {
     res.status(400).send(e);
@@ -39,7 +40,8 @@ app.get('/todos', (req, res) => {
 //Pass the query using the query string
 
 app.get('/todos/:id', (req, res) => {
-  var id = req.params.id;             //Params has the key value pairs, where key is url and value is whatever we give
+  //Params has the key value pairs, where key is url and value is whatever we give
+  var id = req.params.id;
   if (!ObjectID.isValid(id)) {
     res.status(404).send();
   }
@@ -56,8 +58,33 @@ app.get('/todos/:id', (req, res) => {
   ).catch((e) => res.status(404).send());
 });
 
+
+app.delete('/todos/:id', (req, res) => {
+  //get id
+
+  var id = req.params.id;
+
+  //Validate the id --> not valid? return 404
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send();
+  }
+
+  // remove todo by id
+  Todo.findByIdAndRemove(id).then((doc) => {
+ 
+    //if no doc 404
+    if (!doc) {
+      return res.status(404).send();
+    }
+    //succes
+    //if doc return it
+    res.send(doc);
+  }).catch((e) => res.status(404).send()); //error 404
+});
+
 app.listen(port, () => {
-  console.log('Started on port',port);
+  console.log('Started on port', port);
 });
 
 module.exports = { app };
