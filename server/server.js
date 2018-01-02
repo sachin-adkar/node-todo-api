@@ -97,7 +97,7 @@ app.patch('/todos/:id', (req, res) => {
   })
 });
 
-// POST /users
+// POST /users (signup)
 app.post('/users', (req, res) => {
   var body = _.pick(req.body, ['email', 'password']);
   var user = new User(body);
@@ -107,14 +107,14 @@ app.post('/users', (req, res) => {
     return user.generateAuthToken();
 
   }).then((token) => {
-    res.header('x-auth', token).send(user);
+    res.header('x-auth', token).send(user); //setting response header
   }).catch((e) => {
     res.status(400).send(e);
   })
 });
 
 //Private route
-app.get('/user/me', authenticate, (req, res) => {
+app.get('/users/me', authenticate, (req, res) => {
   res.send(req.user);
 });
 
